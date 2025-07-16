@@ -45,7 +45,8 @@ export class HttpRequest {
     const apiId = "dIipa";
     const date = new Date();
     this.rawPath = req.path; // to fix https://github.com/dherault/serverless-offline/issues/1832#issuecomment-2501625384
-
+    this.rawQueryString = req.originalUrl.split("?")[1] || "";
+    this.queryStringParameters = req.query as Record<string, string>;
     this.headers = req.headers as Record<string, string>;
     const reqBody = req.body;
     this.body = typeof reqBody === 'string'
