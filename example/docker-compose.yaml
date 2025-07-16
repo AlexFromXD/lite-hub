@@ -17,13 +17,13 @@ services:
     ports:
       - 9002:8080
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_DEFAULT_REGION=${AWS_REGION}
-      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-      - AWS_REGION=${AWS_REGION}
-      - LAMBDA_ENDPOINT=http://lite-hub:3001
-      - API_GATEWAY_ENDPOINT=http://lite-hub:3002/dev # stage is required
+      - AWS_ACCESS_KEY_ID="fake_key_id"
+      - AWS_SECRET_ACCESS_KEY="fake_key"
+      - AWS_SESSION_TOKEN="fake_token"
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_REGION=us-east-1
+      - LAMBDA_ENDPOINT=http://lite-hub:3002
+      - API_GATEWAY_ENDPOINT=http://lite-hub:3001/dev # stage is required
 
   worker:
     build:
@@ -34,7 +34,7 @@ services:
       - 9003:8080
 
   lite-hub:
-    restart: always
+    restart: always 
     build:
       context: ..
       dockerfile: Dockerfile

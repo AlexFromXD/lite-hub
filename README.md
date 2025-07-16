@@ -37,30 +37,7 @@ CORS_ALLOW_ORIGIN=http://localhost:5173,http://localhost:5174
 - `WS_FUNCTION`: WebSocket message router Lambda
 - `CORS_ALLOW_ORIGIN`: comma-separated origins for CORS preflight
 
----
-
-## 🚀 Quick Start
-
-```sh
-cd ./example
-docker compose up
-```
-
-### 🔗 HTTP API
-
-```sh
-curl http://localhost:3000/http
-```
-
-### 📡 WebSocket API
-
-```sh
-wscat -c ws://localhost:3002
-# Then type:
-> {"action": "sum", "a": 1, "b": 1}
-# Expect:
-< {"ans": 2}
-```
+You can find an [example here](./example/README.md).
 
 ---
 
