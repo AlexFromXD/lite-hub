@@ -58,7 +58,7 @@ export class WSController implements Controller {
               connectionId,
               {
                 eventType: "MESSAGE",
-                routeKey: "message",
+                routeKey: body.action,
               },
               body,
             ),
@@ -72,8 +72,8 @@ export class WSController implements Controller {
           .wsInvoke(
             config.wsFunction as string,
             new WSRequest(connectionId, {
-              eventType: "CONNECT",
-              routeKey: "$connect",
+              eventType: "DISCONNECT",
+              routeKey: "$disconnect",
             }),
           )
           .catch(errorHandler);

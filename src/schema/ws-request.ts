@@ -83,6 +83,6 @@ type DisConnectRequestContext = {
 };
 
 type MessageRequestContext = {
-  routeKey: "message";
+  routeKey: string;
   eventType: "MESSAGE";
 };
