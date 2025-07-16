@@ -5,12 +5,10 @@ const {
 
 const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
 
-const lambdaClient = new LambdaClient({
-  region: process.env.AWS_REGION,
+const lambdaClient = new LambdaClient({ 
   endpoint: process.env.LAMBDA_ENDPOINT,
 });
 const apiClient = new ApiGatewayManagementApiClient({
-  region: process.env.AWS_REGION,
   endpoint: process.env.API_GATEWAY_ENDPOINT,
 });
 
@@ -32,6 +30,13 @@ exports.handler = async (event) => {
   }
 
   if (event.requestContext.routeKey !== "sum") {
+    await apiClient.send(
+      new PostToConnectionCommand({
+        ConnectionId: event.requestContext.connectionId,
+        Data: "Not a valid action.",
+      })
+    );
+
     return {
       statusCode: 400,
       body: "Not a valid action.",

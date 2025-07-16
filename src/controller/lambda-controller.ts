@@ -41,7 +41,7 @@ export class LambdaController implements Controller {
       )
       .listen(this._port, () => {
         logger.info(
-          `LambdaController is listening on this._port ${this._port}`,
+          `LambdaController is listening on port ${this._port}`,
         );
       });
   }
