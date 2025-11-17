@@ -18,6 +18,12 @@ Ideal for projects that need speed, flexibility, and **no cloud dependency**.
 
 ---
 
+## 🚀 Quick Start
+
+See [example here](./example/README.md).
+
+---
+
 ## ⚙️ Configuration
 
 LiteHub uses environment variables to configure function routing and behavior.
@@ -38,6 +44,16 @@ CORS_ALLOW_ORIGIN=http://localhost:5173,http://localhost:5174
 - `CORS_ALLOW_ORIGIN`: comma-separated origins for CORS preflight
 
 You can find an [example here](./example/README.md).
+
+---
+
+## 🛠 Build & Test
+
+```sh
+npm install
+npm run build
+npm test
+```
 
 ---
 
