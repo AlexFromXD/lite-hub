@@ -31,6 +31,14 @@ services:
     ports:
       - 9003:8080
 
+  rest:
+    build:
+      context: ./rest
+      dockerfile: Dockerfile
+    # curl -XPOST "http://localhost:9004/2015-03-31/functions/function/invocations" -d '{}'
+    ports:
+      - 9004:8080
+
   lite-hub:
     restart: always
     build:
@@ -41,7 +49,8 @@ services:
       - 3001:3001
       - 3002:3002
     environment:
-      - FUNCTION_ENDPOINT=ws=http://ws:8080,http=http://http:8080,worker=http://worker:8080
-      - PATH_MAPPING=/api=http
+      - FUNCTION_ENDPOINT=ws=http://ws:8080,http=http://http:8080,worker=http://worker:8080,rest=http://rest:8080
+      - PATH_MAPPING=/api=http,/rest=rest
       - WS_FUNCTION=ws
+      - HTTP_V1_PAYLOAD_FUNCTIONS=rest
     stop_grace_period: 1s
