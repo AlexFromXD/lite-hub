@@ -1,7 +1,7 @@
 import { Request } from "express";
 
 /**
- * @description The event api gateway send to lambda
+ * @description The event that API Gateway, for HTTP APIs, send to lambda
  * @ref https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
  */
 export class HttpRequest {
