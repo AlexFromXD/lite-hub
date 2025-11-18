@@ -7,6 +7,7 @@ import { errorHandler, PathError } from "../exception";
 import { Invoker } from "../invoker";
 import { logger } from "../logger";
 import { HttpRequest } from "../schema/http-request";
+import { RestRequest } from "../schema/rest-request";
 import { Controller } from "./controller";
 
 /**
@@ -52,7 +53,9 @@ export class HttpController implements Controller {
           throw new PathError(req.path);
         }
 
-        const event = new HttpRequest(req);
+        const event = config.isFunctionOnV1HttpRequestPayload(functionName)
+          ? new RestRequest(req)
+          : new HttpRequest(req);
         try {
           const result = await this._invoker.httpInvoke(functionName, event);
           res.status(result.statusCode).send(result.body);

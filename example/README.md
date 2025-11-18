@@ -9,6 +9,9 @@ docker compose up
 
 ```sh
 curl http://localhost:3000/api
+
+# For AWS API Gateway v1 payload format test
+curl http://localhost:3000/rest
 ```
 
 ### 📡 WebSocket API

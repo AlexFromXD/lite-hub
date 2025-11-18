@@ -36,12 +36,17 @@ PATH_MAPPING=/function-a=function-a,/function-b=function-b
 WS_FUNCTION=websocket
 
 CORS_ALLOW_ORIGIN=http://localhost:5173,http://localhost:5174
+
+# Optional
+HTTP_V1_PAYLOAD_FUNCTIONS=function-b
 ```
 
 - `FUNCTION_ENDPOINT`: map logical function names to container URLs
 - `PATH_MAPPING`: map HTTP paths to Lambda functions
 - `WS_FUNCTION`: WebSocket message router Lambda
 - `CORS_ALLOW_ORIGIN`: comma-separated origins for CORS preflight
+- (Optional) `HTTP_V1_PAYLOAD_FUNCTIONS`: comma-separated list of the logical function names, corresponding to the ones listed in `FUNCTION_ENDPOINT`, that intend to support [AWS API Gateway v1 payload format](https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-rest-api.html)
+  - If not set, all functions will use [v2 payload format](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html#http-api-develop-integrations-lambda.proxy-format-structure)
 
 You can find an [example here](./example/README.md).
 
