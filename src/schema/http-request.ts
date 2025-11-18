@@ -2,7 +2,7 @@ import { Request } from "express";
 
 /**
  * @description The event that API Gateway, for HTTP APIs, send to lambda
- * @ref https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
+ * @see {@link https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html | AWS documentation}
  */
 export class HttpRequest {
   version = "2.0";
