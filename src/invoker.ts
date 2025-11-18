@@ -4,6 +4,7 @@ import { config } from "./config";
 import { FunctionNotFoundError } from "./exception";
 import { HttpRequest } from "./schema/http-request";
 import { HttpResponse } from "./schema/http-response";
+import { RestRequest } from "./schema/rest-request";
 import { WSRequest } from "./schema/ws-request";
 import { throttle } from "./throttle";
 
@@ -18,7 +19,7 @@ export class Invoker {
 
   async httpInvoke(
     functionName: string,
-    event: HttpRequest,
+    event: HttpRequest | RestRequest,
   ): Promise<HttpResponse> {
     return throttle.add(functionName, async () => {
       const url = this.getUrl(functionName);

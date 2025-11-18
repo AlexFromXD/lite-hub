@@ -1,5 +1,8 @@
 import { logger } from "./logger";
 
+/** Delimiter for environment variables to be parsed as arrays */
+const envArrayFieldDelimiter = ",";
+
 class Config {
   readonly port = 3000;
   /**
@@ -51,10 +54,25 @@ class Config {
     return this._corsAllowOrigin?.split(",") || [];
   }
 
+  /**
+   * @description separated by comma
+   */
+  private readonly _httpV1PayloadFunctionNameMap = new Map<string, undefined>(
+    process.env.HTTP_V1_PAYLOAD_FUNCTIONS?.split(envArrayFieldDelimiter)?.map(
+      (functionName) => [functionName, undefined],
+    ) || [],
+  );
+
+  isFunctionOnV1HttpRequestPayload(functionName: string): boolean {
+    return this._httpV1PayloadFunctionNameMap.has(functionName);
+  }
+
   constructor() {
     logger.info("found path:");
     for (const [key, value] of Object.entries(this._pathMapping)) {
-      logger.info(`- ${key} => ${value} (${this.getOriginByFunction(value)})`);
+      logger.info(
+        `- ${key} => ${value} (${this.getOriginByFunction(value)}) ${this.isFunctionOnV1HttpRequestPayload(value) ? "[on AWS API Gateway payload format 1.0]" : ""}`,
+      );
     }
   }
 }
