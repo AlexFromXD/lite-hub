@@ -41,4 +41,20 @@ describe("Path Mapping", () => {
     expect(config.getFunctionByPath("/c")).toBe("default");
     expect(config.getFunctionByPath("/d")).toBe("default");
   });
+
+  it("should log path mappings on initialization", async () => {
+    process.env[pathMapping] = "/a=a1,/b=b1";
+    process.env.FUNCTION_ENDPOINT =
+      "a1=http://a1-endpoint,b1=http://b1-endpoint";
+    const { logger } = await import("../src/logger");
+
+    await import("../src/config");
+
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.stringContaining("/a => a1 (http://a1-endpoint)"),
+    );
+    expect(logger.info).toHaveBeenCalledWith(
+      expect.stringContaining("/b => b1 (http://b1-endpoint)"),
+    );
+  });
 });
