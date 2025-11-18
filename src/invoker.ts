@@ -23,6 +23,11 @@ export class Invoker {
     return throttle.add(functionName, async () => {
       const url = this.getUrl(functionName);
       const res = await axios.post(url.href, event);
+
+      // TODO: Infer response in 2.0 format
+      // "With the 2.0 format version, API Gateway can infer the response format for you."
+      // Ref: http-api-develop-integrations-lambda.v2
+
       return res.data;
     });
   }
@@ -30,7 +35,7 @@ export class Invoker {
   async wsInvoke(
     functionName: string,
     event: WSRequest,
-  ): Promise<HttpResponse> { 
+  ): Promise<HttpResponse> {
     return throttle.add(functionName, async () => {
       const url = this.getUrl(functionName);
       const res = await axios.post(url.href, event, {

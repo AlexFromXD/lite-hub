@@ -1,8 +1,8 @@
 import { Request } from "express";
 
 /**
- * @description The event api gateway send to lambda
- * @ref https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html
+ * @description The event that API Gateway, for HTTP APIs, send to lambda
+ * @see {@link https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html | AWS documentation}
  */
 export class HttpRequest {
   version = "2.0";
@@ -38,7 +38,12 @@ export class HttpRequest {
     time: string;
     timeEpoch: number;
   };
+
+  /**
+   * @see {@link https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html#http-api-develop-integrations-lambda.v2 | AWS documentation}
+   */
   body: string = "";
+
   isBase64Encoded: boolean = false;
 
   constructor(req: Request) {
@@ -48,10 +53,10 @@ export class HttpRequest {
     this.rawQueryString = req.originalUrl.split("?")[1] || "";
     this.queryStringParameters = req.query as Record<string, string>;
     this.headers = req.headers as Record<string, string>;
-    const reqBody = req.body;
-    this.body = typeof reqBody === 'string'
-      ? reqBody
-      : JSON.stringify(reqBody);
+
+    // Ensure body is serialized to string
+    this.body =
+      typeof req.body === "string" ? req.body : JSON.stringify(req.body);
 
     if (req.headers.cookie) {
       // Format 2.0 includes a new cookies field. All cookie headers in the request are combined with commas and added to the cookies field.
