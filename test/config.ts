@@ -1,4 +1,3 @@
-// Logger is stubbed to avoid cluttering test output
 jest.mock("../src/logger", () => ({
   logger: {
     info: jest.fn(),
@@ -8,7 +7,7 @@ jest.mock("../src/logger", () => ({
   },
 }));
 
-describe("Path Mapping", () => {
+describe("Config - Path Mapping", () => {
   const pathMapping = "PATH_MAPPING";
 
   beforeEach(() => {
