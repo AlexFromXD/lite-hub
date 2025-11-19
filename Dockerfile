@@ -1,21 +1,28 @@
+ARG PNPM_VERSION="10.18.2"
+
 FROM node:22-alpine AS build
 
 WORKDIR /build
 
+RUN npm install -g pnpm@"${PNPM_VERSION}"
+
 COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm@10.18.2 && pnpm install
 
-COPY . /build/
+RUN pnpm install --frozen-lockfile
 
-RUN pnpm build
+# Copy all files to the build context
+COPY . .
+
+RUN pnpm build \
+  # Prune dev dependencies
+  && CI=true pnpm prune --prod
 
 FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm@10.18.2 && pnpm install --no-dev
+COPY package.json ./
+COPY --from=build /build/node_modules ./node_modules
+COPY --from=build /build/dist ./dist
 
-COPY --from=build /build/dist /app/dist
-
-CMD [ "pnpm", "start" ]
+CMD [ "npm", "start" ]
