@@ -20,9 +20,6 @@
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
     "strict": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ],
-  },
+    "typeRoots": ["./node_modules/@types", "./types"]
+  }
 }

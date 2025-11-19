@@ -1,14 +1,14 @@
-jest.mock("../src/logger", () => ({
+vi.mock("../src/logger", () => ({
   logger: {
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    debug: jest.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
   },
 }));
 
 beforeEach(() => {
-  jest.resetModules(); // clear cache since config is singleton
+  vi.resetModules(); // clear cache since config is singleton
 });
 
 describe("Config - Path Mapping", () => {
