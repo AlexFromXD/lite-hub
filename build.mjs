@@ -88,6 +88,15 @@ async function build() {
 
       // Keep function and class names for better debugging
       keepNames: !isProduction,
+
+      // Aggressive minification for production
+      minifyWhitespace: isProduction,
+      minifyIdentifiers: isProduction,
+      minifySyntax: isProduction,
+
+      // Additional size optimizations
+      legalComments: "none",
+      charset: "utf8",
     });
 
     // Output bundle analysis
