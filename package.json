@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc -p tsconfig.build.json",
+    "build": "node build.mjs",
+    "build:tsc": "tsc -p tsconfig.build.json",
+    "build:prod": "NODE_ENV=production node build.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -34,6 +36,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.12.2",
-    "vitest": "^4.0.10"
+    "vitest": "^4.0.10",
+    "esbuild": "^0.23.0"
   }
 }
