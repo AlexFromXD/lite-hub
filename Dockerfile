@@ -10,18 +10,15 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
-# Copy all files to the build context
+# Copy source files for building
 COPY . .
 
-RUN pnpm tsc -p tsconfig.build.json \
-  # Prune dev dependencies
-  && CI=true pnpm prune --prod
+RUN NODE_ENV=production node build.mjs
 
 FROM node:22-alpine
 
 WORKDIR /app
 
-COPY --from=build /build/node_modules ./node_modules
-COPY --from=build /build/dist ./dist
+COPY --from=build /build/dist/index.js ./index.js
 
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "index.js" ]
