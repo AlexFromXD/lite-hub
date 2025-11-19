@@ -54,10 +54,15 @@ You can find an [example here](./example/README.md).
 
 ## 🛠 Build & Test
 
+### Prereqs
+
+- [Node.js](https://nodejs.org/) v22+
+- [pnpm](https://pnpm.io/) v10+
+
 ```sh
-npm install
-npm run build
-npm test
+pnpm install
+pnpm build
+pnpm test
 ```
 
 ---
