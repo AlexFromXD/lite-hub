@@ -24,7 +24,8 @@ RUN NODE_ENV=production node build.mjs \
 FROM alpine:3.21 AS runtime
 
 # Install Node.js and compress/strip everything unnecessary
-RUN apk add --no-cache nodejs=22.15.1-r0 binutils=2.43.1-r3 upx=4.2.4-r0 \
+RUN apk add --no-cache nodejs=22.15.1-r0 \
+    && apk add --no-cache --virtual .build-tools binutils=2.43.1-r3 upx=4.2.4-r0 \
     && strip /usr/bin/node \
     && upx --best --lzma /usr/bin/node \
     && find /usr -name "*.a" -delete \
@@ -32,7 +33,7 @@ RUN apk add --no-cache nodejs=22.15.1-r0 binutils=2.43.1-r3 upx=4.2.4-r0 \
     && rm -rf /usr/include /usr/lib/pkgconfig /usr/lib/cmake \
     && rm -rf /usr/share/man /usr/share/doc /usr/share/info \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/* /root/.npm \
-    && apk del binutils upx
+    && apk del .build-tools
 
 # Create minimal non-root user
 RUN adduser -D -s /sbin/nologin -u 1001 app
