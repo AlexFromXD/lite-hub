@@ -128,22 +128,4 @@ async function build() {
   }
 }
 
-// Handle different build modes
-const command = process.argv[2];
-
-switch (command) {
-  case "analyze":
-    process.env.NODE_ENV = "production";
-    console.log("🔍 Running build analysis...");
-    await build();
-    break;
-
-  case "production":
-    process.env.NODE_ENV = "production";
-    await build();
-    break;
-
-  default:
-    await build();
-    break;
-}
+await build();
