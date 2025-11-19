@@ -13,7 +13,7 @@ RUN pnpm install --frozen-lockfile
 # Copy all files to the build context
 COPY . .
 
-RUN pnpm build \
+RUN pnpm tsc -p tsconfig.build.json \
   # Prune dev dependencies
   && CI=true pnpm prune --prod
 
@@ -21,8 +21,7 @@ FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json ./
 COPY --from=build /build/node_modules ./node_modules
 COPY --from=build /build/dist ./dist
 
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/index.js" ]
