@@ -1,21 +1,27 @@
+ARG PNPM_VERSION="10.18.2"
+
 FROM node:22-alpine AS build
 
 WORKDIR /build
 
-COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install -g pnpm@"${PNPM_VERSION}"
 
-COPY . /build/
-RUN npm run build
+COPY package.json pnpm-lock.yaml ./
 
+RUN pnpm install --frozen-lockfile
+
+# Copy all files to the build context
+COPY . .
+
+RUN pnpm tsc -p tsconfig.build.json \
+  # Prune dev dependencies
+  && CI=true pnpm prune --prod
 
 FROM node:22-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm install --omit=dev
+COPY --from=build /build/node_modules ./node_modules
+COPY --from=build /build/dist ./dist
 
-COPY --from=build /build/dist /app/dist
-
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/index.js" ]
