@@ -1,4 +1,8 @@
-import { isHttpResponse } from "../../src/schema/http-response";
+import {
+  isHttpResponse,
+  isInferableHttpResponse,
+  newInferredHttpResponse,
+} from "../../src/schema/http-response";
 
 describe("isHttpResponse()", () => {
   it("should return true for a valid HttpResponse", () => {
@@ -80,5 +84,50 @@ describe("isHttpResponse()", () => {
       headers: { "Content-Type": 123 },
     };
     expect(isHttpResponse(response)).toBe(false);
+  });
+});
+
+describe("isInferableHttpResponse()", () => {
+  it("should return false if data has statusCode field", () => {
+    const data = { statusCode: 200, body: "test" };
+    expect(isInferableHttpResponse(data)).toBe(false);
+  });
+
+  it("should return true for an object without statusCode", () => {
+    const data = { message: "Hello, World!" };
+    expect(isInferableHttpResponse(data)).toBe(true);
+  });
+  it("should return true for a valid JSON string", () => {
+    const data = JSON.stringify({ message: "Hello, World!" });
+    expect(isInferableHttpResponse(data)).toBe(true);
+  });
+
+  it("should return true for a plain string", () => {
+    const data = "Just a plain string";
+    expect(isInferableHttpResponse(data)).toBe(true);
+  });
+});
+
+describe("newInferredHttpResponse()", () => {
+  it("should create a valid HttpResponse from an object body", () => {
+    const body = { message: "Hello, World!" };
+    const response = newInferredHttpResponse(body);
+    expect(response).toEqual({
+      statusCode: 200,
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+      isBase64Encoded: false,
+    });
+  });
+
+  it("should create a valid HttpResponse from a string body", () => {
+    const body = "Plain string body";
+    const response = newInferredHttpResponse(body);
+    expect(response).toEqual({
+      statusCode: 200,
+      body: body,
+      headers: { "Content-Type": "application/json" },
+      isBase64Encoded: false,
+    });
   });
 });
