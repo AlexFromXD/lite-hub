@@ -1,8 +1,10 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "extends": "../tsconfig.json",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "types": ["node", "vitest/globals"]
   },
-  "include": ["**/*.ts", "../node_modules/vitest/globals.d.ts"],
+  "include": ["./**/*.ts"],
   "exclude": []
 }
