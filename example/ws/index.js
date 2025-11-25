@@ -5,7 +5,7 @@ const {
 
 const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
 
-const lambdaClient = new LambdaClient({ 
+const lambdaClient = new LambdaClient({
   endpoint: process.env.LAMBDA_ENDPOINT,
 });
 const apiClient = new ApiGatewayManagementApiClient({
@@ -34,7 +34,7 @@ exports.handler = async (event) => {
       new PostToConnectionCommand({
         ConnectionId: event.requestContext.connectionId,
         Data: "Not a valid action.",
-      })
+      }),
     );
 
     return {
@@ -58,7 +58,7 @@ exports.handler = async (event) => {
     new PostToConnectionCommand({
       ConnectionId: event.requestContext.connectionId,
       Data: result,
-    })
+    }),
   );
 
   return {
