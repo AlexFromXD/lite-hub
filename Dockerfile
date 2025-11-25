@@ -3,6 +3,9 @@ ARG PNPM_VERSION="10.18.2"
 # Build stage
 FROM node:22-alpine AS build
 
+# Disable Husky git hooks during build
+ENV CI=true
+
 WORKDIR /build
 
 RUN apk add --no-cache --virtual .build-deps \
