@@ -110,7 +110,7 @@ type Message = {
    * @reference https://docs.aws.amazon.com/apigateway/latest/developerguide/websocket-api-develop-routes.html#apigateway-websocket-api-route-selection-expressions
    */
   action: string;
-  payload: any;
+  payload: unknown;
 };
 
 function toString(body: Buffer | string | object): string {
