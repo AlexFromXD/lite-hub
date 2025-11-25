@@ -80,7 +80,7 @@ describe("HttpController", () => {
       controller.init();
 
       expect(mockApp.use).toHaveBeenCalled();
-      expect(mockApp.all).toHaveBeenCalledWith("*", expect.any(Function));
+      expect(mockApp.all).toHaveBeenCalledWith("/*splat", expect.any(Function));
     });
   });
 
