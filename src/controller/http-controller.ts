@@ -1,3 +1,4 @@
+import { Server } from "node:http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -18,6 +19,7 @@ export class HttpController implements Controller {
   private readonly _invoker: Invoker;
   private readonly _ignoredPaths: string[] = ["/favicon.ico"];
   private readonly _port = config.port;
+  private _server: Server | undefined;
 
   constructor() {
     this._app = express();
@@ -25,7 +27,7 @@ export class HttpController implements Controller {
   }
 
   init() {
-    this._app
+    this._server = this._app
       .use(morgan("tiny"))
       .use(
         cors({
@@ -67,5 +69,16 @@ export class HttpController implements Controller {
       .listen(this._port, () => {
         logger.info(`HttpController is listening on port ${this._port}`);
       });
+  }
+
+  shutdown(): void {
+    logger.info("HttpController shutting down...");
+    if (!this._server) {
+      return;
+    }
+
+    this._server.close(() => {
+      logger.info("HttpController shutdown complete");
+    });
   }
 }

@@ -8,6 +8,7 @@ const mockServer = {
     return {} as Server;
   }),
   on: vi.fn(),
+  close: vi.fn((callback) => callback?.()),
 };
 
 const mockApp = {
@@ -88,6 +89,22 @@ describe("WSController", () => {
         "/:stage/@connections/:connectionId",
         expect.any(Function),
       );
+    });
+  });
+
+  describe("shutdown()", () => {
+    it("should close server and log shutdown messages", async () => {
+      const { WSController } = await import(
+        "../../src/controller/ws-controller"
+      );
+      const { logger } = await import("../../src/logger");
+
+      const controller = new WSController();
+      controller.init(); // Initialize to create server
+      controller.shutdown();
+
+      expect(logger.info).toHaveBeenCalledWith("WSController shutting down...");
+      expect(mockServer.close).toHaveBeenCalled();
     });
   });
 });

@@ -1,12 +1,16 @@
 import { Invoker } from "src/invoker";
 
 //#region Mock express module
+const mockServer = {
+  close: vi.fn((callback) => callback?.()),
+};
+
 const mockApp = {
   use: vi.fn().mockReturnThis(),
   all: vi.fn().mockReturnThis(),
   listen: vi.fn((_, callback) => {
     callback?.();
-    return { close: vi.fn() };
+    return mockServer;
   }),
 };
 
@@ -77,6 +81,39 @@ describe("HttpController", () => {
 
       expect(mockApp.use).toHaveBeenCalled();
       expect(mockApp.all).toHaveBeenCalledWith("*", expect.any(Function));
+    });
+  });
+
+  describe("shutdown()", () => {
+    it("should close server and log shutdown messages", async () => {
+      const { HttpController } = await import(
+        "../../src/controller/http-controller"
+      );
+      const { logger } = await import("../../src/logger");
+
+      const controller = new HttpController();
+      controller.init(); // Initialize to create server
+      controller.shutdown();
+
+      expect(logger.info).toHaveBeenCalledWith(
+        "HttpController shutting down...",
+      );
+      expect(mockServer.close).toHaveBeenCalled();
+    });
+
+    it("should handle shutdown when server is not initialized", async () => {
+      const { HttpController } = await import(
+        "../../src/controller/http-controller"
+      );
+      const { logger } = await import("../../src/logger");
+
+      const controller = new HttpController();
+      controller.shutdown(); // Call without init()
+
+      expect(logger.info).toHaveBeenCalledWith(
+        "HttpController shutting down...",
+      );
+      expect(mockServer.close).not.toHaveBeenCalled();
     });
   });
 });

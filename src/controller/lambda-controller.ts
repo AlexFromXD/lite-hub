@@ -1,3 +1,4 @@
+import { Server } from "node:http";
 import express, { Request, Response } from "express";
 import { createProxyServer } from "http-proxy";
 import morgan from "morgan";
@@ -15,6 +16,7 @@ export class LambdaController implements Controller {
   private readonly _proxy;
   private readonly _invoker: Invoker;
   private readonly _port = config.port + 2;
+  private _server: Server | undefined;
 
   constructor() {
     this._app = express();
@@ -23,7 +25,7 @@ export class LambdaController implements Controller {
   }
 
   init() {
-    this._app
+    this._server = this._app
       .use(morgan("tiny"))
       .post(
         "/2015-03-31/functions/:functionName/invocations",
@@ -81,5 +83,16 @@ export class LambdaController implements Controller {
     };
 
     await throttle.add(functionName, task);
+  }
+
+  shutdown(): void {
+    logger.info("LambdaController shutting down...");
+    if (!this._server) {
+      return;
+    }
+
+    this._server.close(() => {
+      logger.info("LambdaController shutdown complete");
+    });
   }
 }

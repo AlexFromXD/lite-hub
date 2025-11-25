@@ -1,12 +1,15 @@
 import { Invoker } from "src/invoker";
 
 //#region Mock express module
+const mockServer = {
+  close: vi.fn((callback) => callback?.()),
+};
 const mockApp = {
   use: vi.fn().mockReturnThis(),
   post: vi.fn().mockReturnThis(),
   listen: vi.fn((_, callback) => {
     callback?.();
-    return { close: vi.fn() };
+    return mockServer;
   }),
 };
 
@@ -96,6 +99,39 @@ describe("LambdaController", () => {
         "/2015-03-31/functions/:functionName/invocations",
         expect.any(Function),
       );
+    });
+  });
+
+  describe("shutdown()", () => {
+    it("should close server and log shutdown messages", async () => {
+      const { LambdaController } = await import(
+        "../../src/controller/lambda-controller"
+      );
+      const { logger } = await import("../../src/logger");
+
+      const controller = new LambdaController();
+      controller.init(); // Initialize to create server
+      controller.shutdown();
+
+      expect(logger.info).toHaveBeenCalledWith(
+        "LambdaController shutting down...",
+      );
+      expect(mockServer.close).toHaveBeenCalled();
+    });
+
+    it("should handle shutdown when server is not initialized", async () => {
+      const { LambdaController } = await import(
+        "../../src/controller/lambda-controller"
+      );
+      const { logger } = await import("../../src/logger");
+
+      const controller = new LambdaController();
+      controller.shutdown(); // Call without init()
+
+      expect(logger.info).toHaveBeenCalledWith(
+        "LambdaController shutting down...",
+      );
+      expect(mockServer.close).not.toHaveBeenCalled();
     });
   });
 });
