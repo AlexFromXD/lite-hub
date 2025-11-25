@@ -1,0 +1,103 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "**/README.md"
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "**/README.md"
+
+env:
+  CI: true
+  LITE_HUB_PORT: 3000
+  WS_CLIENT_PORT: 3001
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Start services with Docker Compose
+        run: docker compose -f example/docker-compose.yaml up -d --build
+        timeout-minutes: 10
+
+      - name: Wait for lite-hub to be ready
+        run: |
+          timeout 60 bash -c 'until curl -f http://localhost:${{ env.LITE_HUB_PORT }}/api 2>/dev/null; do sleep 2; done'
+        timeout-minutes: 2
+
+      - name: Test HTTP API endpoint
+        run: |
+          response=$(curl -s -w "\n%{http_code}" http://localhost:${{ env.LITE_HUB_PORT }}/api)
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          echo "Status: $status"
+          echo "Body: $body"
+          if [ "$status" != "200" ]; then
+            echo "Expected status 200, got $status"
+            exit 1
+          fi
+          if ! echo "$body" | grep -q "This is python api v1"; then
+            echo "Expected body to contain 'This is python api v1', got: $body"
+            exit 1
+          fi
+
+      - name: Test REST endpoint (AWS API Gateway v1 payload format)
+        run: |
+          response=$(curl -s -w "\n%{http_code}" http://localhost:${{ env.LITE_HUB_PORT }}/rest)
+          status=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          echo "Status: $status"
+          echo "Body: $body"
+          if [ "$status" != "200" ]; then
+            echo "Expected status 200, got $status"
+            exit 1
+          fi
+          if ! echo "$body" | grep -q "AWS API Gateway"; then
+            echo "Expected body to contain 'AWS API Gateway', got: $body"
+            exit 1
+          fi
+
+      - name: Install websocket-client for WebSocket testing
+        run: pip install --break-system-packages --root-user-action=ignore websocket-client
+
+      - name: Test WebSocket endpoint
+        run: |
+          python3 << 'EOF'
+          import json
+          import websocket
+
+          # Connect to WebSocket
+          ws = websocket.create_connection("ws://localhost:${{ env.WS_CLIENT_PORT }}")
+
+          # Send sum action
+          message = {"action": "sum", "a": 1, "b": 1}
+          ws.send(json.dumps(message))
+
+          # Receive response
+          response = ws.recv()
+          ws.close()
+
+          print(f"WebSocket response: {response}")
+
+          # Validate response
+          data = json.loads(response)
+          assert "ans" in data, f"Expected 'ans' in response, got: {data}"
+          assert data["ans"] == 2, f"Expected ans=2, got: {data['ans']}"
+
+          print("✓ WebSocket test passed")
+          EOF
+
+      - name: Show Docker Compose logs on failure
+        if: failure()
+        run: docker compose -f example/docker-compose.yaml logs
+
+      - name: Stop services
+        if: always()
+        run: docker compose -f example/docker-compose.yaml down
