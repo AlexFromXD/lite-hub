@@ -1,0 +1,11 @@
+.git/
+
+# Generated files
+pnpm-lock.yaml
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+coverage/
