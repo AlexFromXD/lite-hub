@@ -1,6 +1,7 @@
 /**
- * @description controller is to handle different types of function invocation
+ * @description Controller that and handles different types of function invocation and lifecycle events.
  */
 export interface Controller {
   init(): void;
+  shutdown(): void;
 }
