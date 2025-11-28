@@ -43,7 +43,8 @@ export class HttpController implements Controller {
       )
       .use(bodyParser.json())
       .use(bodyParser.text({ type: "*/*" }))
-      .all("*", async (req, res) => {
+      // Wildcard route to match all paths
+      .all("/*splat", async (req, res) => {
         const path = req.path;
         if (this._ignoredPaths.includes(path)) {
           res.status(404).send("Not Found");

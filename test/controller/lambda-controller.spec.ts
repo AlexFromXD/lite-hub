@@ -69,9 +69,8 @@ describe("LambdaController", () => {
 
   describe("init()", () => {
     it("should start server on configured port + 2", async () => {
-      const { LambdaController } = await import(
-        "../../src/controller/lambda-controller"
-      );
+      const { LambdaController } =
+        await import("../../src/controller/lambda-controller");
       const { logger } = await import("../../src/logger");
       const { config } = await import("../../src/config");
 
@@ -88,9 +87,8 @@ describe("LambdaController", () => {
     });
 
     it("should configure Lambda invocation endpoint", async () => {
-      const { LambdaController } = await import(
-        "../../src/controller/lambda-controller"
-      );
+      const { LambdaController } =
+        await import("../../src/controller/lambda-controller");
 
       const controller = new LambdaController();
       controller.init();
@@ -104,9 +102,8 @@ describe("LambdaController", () => {
 
   describe("shutdown()", () => {
     it("should close server and log shutdown messages", async () => {
-      const { LambdaController } = await import(
-        "../../src/controller/lambda-controller"
-      );
+      const { LambdaController } =
+        await import("../../src/controller/lambda-controller");
       const { logger } = await import("../../src/logger");
 
       const controller = new LambdaController();
@@ -120,9 +117,8 @@ describe("LambdaController", () => {
     });
 
     it("should handle shutdown when server is not initialized", async () => {
-      const { LambdaController } = await import(
-        "../../src/controller/lambda-controller"
-      );
+      const { LambdaController } =
+        await import("../../src/controller/lambda-controller");
       const { logger } = await import("../../src/logger");
 
       const controller = new LambdaController();

@@ -51,7 +51,8 @@ export const isHttpResponse = (data: unknown): data is HttpResponse => {
  * @see {@link https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html#http-api-develop-integrations-lambda.v2}
  */
 export const isInferableHttpResponse = (data: unknown): boolean => {
-  const hasStatusCode = typeof data === "object" && "statusCode" in data;
+  const hasStatusCode =
+    data && typeof data === "object" && "statusCode" in data;
   if (hasStatusCode) return false;
 
   const isValidJson = (input: unknown): boolean => {

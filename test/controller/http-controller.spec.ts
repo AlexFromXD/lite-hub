@@ -53,9 +53,8 @@ describe("HttpController", () => {
 
   describe("init()", () => {
     it("should start server on configured port", async () => {
-      const { HttpController } = await import(
-        "../../src/controller/http-controller"
-      );
+      const { HttpController } =
+        await import("../../src/controller/http-controller");
       const { config } = await import("../../src/config");
       const { logger } = await import("../../src/logger");
 
@@ -72,23 +71,21 @@ describe("HttpController", () => {
     });
 
     it("should configure middleware", async () => {
-      const { HttpController } = await import(
-        "../../src/controller/http-controller"
-      );
+      const { HttpController } =
+        await import("../../src/controller/http-controller");
 
       const controller = new HttpController();
       controller.init();
 
       expect(mockApp.use).toHaveBeenCalled();
-      expect(mockApp.all).toHaveBeenCalledWith("*", expect.any(Function));
+      expect(mockApp.all).toHaveBeenCalledWith("/*splat", expect.any(Function));
     });
   });
 
   describe("shutdown()", () => {
     it("should close server and log shutdown messages", async () => {
-      const { HttpController } = await import(
-        "../../src/controller/http-controller"
-      );
+      const { HttpController } =
+        await import("../../src/controller/http-controller");
       const { logger } = await import("../../src/logger");
 
       const controller = new HttpController();
@@ -102,9 +99,8 @@ describe("HttpController", () => {
     });
 
     it("should handle shutdown when server is not initialized", async () => {
-      const { HttpController } = await import(
-        "../../src/controller/http-controller"
-      );
+      const { HttpController } =
+        await import("../../src/controller/http-controller");
       const { logger } = await import("../../src/logger");
 
       const controller = new HttpController();

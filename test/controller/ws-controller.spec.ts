@@ -59,9 +59,8 @@ describe("WSController", () => {
 
   describe("init()", () => {
     it("should start server on configured port + 1", async () => {
-      const { WSController } = await import(
-        "../../src/controller/ws-controller"
-      );
+      const { WSController } =
+        await import("../../src/controller/ws-controller");
       const { config } = await import("../../src/config");
       const { logger } = await import("../../src/logger");
 
@@ -78,9 +77,8 @@ describe("WSController", () => {
     });
 
     it("should configure connection management endpoint", async () => {
-      const { WSController } = await import(
-        "../../src/controller/ws-controller"
-      );
+      const { WSController } =
+        await import("../../src/controller/ws-controller");
 
       const controller = new WSController();
       controller.init();
@@ -94,9 +92,8 @@ describe("WSController", () => {
 
   describe("shutdown()", () => {
     it("should close server and log shutdown messages", async () => {
-      const { WSController } = await import(
-        "../../src/controller/ws-controller"
-      );
+      const { WSController } =
+        await import("../../src/controller/ws-controller");
       const { logger } = await import("../../src/logger");
 
       const controller = new WSController();

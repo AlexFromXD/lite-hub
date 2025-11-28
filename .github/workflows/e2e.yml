@@ -43,8 +43,8 @@ jobs:
             echo "Expected status 200, got $status"
             exit 1
           fi
-          if ! echo "$body" | grep -q "This is python api v1"; then
-            echo "Expected body to contain 'This is python api v1', got: $body"
+          if ! echo "$body" | grep -q "This is a python api example"; then
+            echo "Expected body to contain 'This is a python api example', got: $body"
             exit 1
           fi
 
