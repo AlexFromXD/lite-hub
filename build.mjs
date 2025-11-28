@@ -10,7 +10,7 @@ async function cleanDist() {
   try {
     await fs.rm("./dist", { recursive: true, force: true });
     console.log("✓ Cleaned dist directory");
-  } catch (error) {
+  } catch {
     // Directory doesn't exist, that's fine
   }
 }

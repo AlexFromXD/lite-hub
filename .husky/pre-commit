@@ -1,0 +1,5 @@
+# Type check
+npx tsc --noEmit
+
+# Other sanity checks, like linter and formatter
+npx lint-staged

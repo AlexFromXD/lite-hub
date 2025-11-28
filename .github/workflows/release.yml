@@ -3,7 +3,7 @@ name: Build and Push to GHCR
 on:
   push:
     tags:
-      - 'release-*'
+      - "release-*"
   workflow_dispatch:
 
 jobs:

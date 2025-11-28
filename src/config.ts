@@ -24,6 +24,9 @@ class Config {
     process.env.PATH_MAPPING?.split(",")
       .map((x) => {
         const [path, functionName] = x.split("=");
+        if (!path || !functionName) {
+          throw new Error(`Invalid PATH_MAPPING format found: ${x}`);
+        }
         return {
           path: path.split("/"),
           functionName,
@@ -43,6 +46,8 @@ class Config {
     if (this._pathMapping["/*"]) {
       return this._pathMapping["/*"];
     }
+
+    return undefined;
   }
 
   /**
@@ -69,10 +74,13 @@ class Config {
 
   constructor() {
     logger.info("found path:");
-    for (const [key, value] of Object.entries(this._pathMapping)) {
-      logger.info(
-        `- ${key} => ${value} (${this.getOriginByFunction(value)}) ${this.isFunctionOnV1HttpRequestPayload(value) ? "[on AWS API Gateway payload format 1.0]" : ""}`,
-      );
+    for (const [key, functionName] of Object.entries(this._pathMapping)) {
+      const origin = this.getOriginByFunction(functionName);
+      if (origin) {
+        logger.info(
+          `- ${key} => ${functionName} (${origin}) ${this.isFunctionOnV1HttpRequestPayload(functionName) ? "[on AWS API Gateway payload format 1.0]" : ""}`,
+        );
+      }
     }
   }
 }
