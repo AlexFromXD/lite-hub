@@ -1,6 +1,2 @@
 def handler(event, context):
-    return {
-        "statusCode": 200,
-        "headers": { "Content-Type": "application/json" },
-        "body": "This is python api v1"
-    }
+    return "This is a python api example"
