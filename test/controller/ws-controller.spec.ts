@@ -7,6 +7,7 @@ const mockServer = {
     callback?.();
     return {} as Server;
   }),
+  listening: true,
   on: vi.fn(),
   close: vi.fn((callback) => callback?.()),
 };
@@ -55,7 +56,18 @@ vi.mock("../../src/config", () => ({
 describe("WSController", () => {
   beforeEach(vi.clearAllMocks);
 
-  afterEach(vi.resetModules);
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.resetModules();
+  });
+
+  it("should construct without error even when wsFunction is not configured", async () => {
+    const { WSController } = await import("../../src/controller/ws-controller");
+
+    expect(() => {
+      new WSController();
+    }).not.toThrow();
+  });
 
   describe("init()", () => {
     it("should start server on configured port + 1", async () => {
@@ -88,6 +100,23 @@ describe("WSController", () => {
         expect.any(Function),
       );
     });
+
+    it("should warn on init when WS_FUNCTION is not configured", async () => {
+      // Override config.wsFunction to undefined
+      const { config } = await import("../../src/config");
+      Object.defineProperty(config, "wsFunction", { value: undefined });
+
+      const { WSController } =
+        await import("../../src/controller/ws-controller");
+      const { logger } = await import("../../src/logger");
+
+      const controller = new WSController();
+      controller.init();
+
+      expect(logger.warn).toHaveBeenCalledWith(
+        "WebSocket function is not configured - WebSocket functionality disabled",
+      );
+    });
   });
 
   describe("shutdown()", () => {
@@ -102,6 +131,20 @@ describe("WSController", () => {
 
       expect(logger.info).toHaveBeenCalledWith("WSController shutting down...");
       expect(mockServer.close).toHaveBeenCalled();
+    });
+
+    it("should handle shutdown when server is not initialized", async () => {
+      mockServer.listening = false; // Simulate server not started
+      const { WSController } =
+        await import("../../src/controller/ws-controller");
+      const { logger } = await import("../../src/logger");
+
+      const controller = new WSController();
+      // Skip initialization to keep server in non-listening state
+      controller.shutdown();
+
+      expect(logger.info).not.toHaveBeenCalled();
+      expect(mockServer.close).not.toHaveBeenCalled();
     });
   });
 });

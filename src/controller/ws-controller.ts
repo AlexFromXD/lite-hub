@@ -20,15 +20,19 @@ export class WSController implements Controller {
   private readonly _connections = new Map<string, WebSocket>();
 
   constructor() {
-    if (!config.wsFunction) {
-      throw new Error("WebSocket function is not configured");
-    }
     this._app = express();
     this._server = createServer(this._app);
     this._invoker = new Invoker();
   }
 
   init() {
+    if (!config.wsFunction) {
+      logger.warn(
+        "WebSocket function is not configured - WebSocket functionality disabled",
+      );
+      return;
+    }
+
     new WebSocketServer({
       server: this._server,
     }).on("connection", (ws: WebSocket) => {
@@ -105,6 +109,10 @@ export class WSController implements Controller {
   }
 
   shutdown(): void {
+    if (!this._server.listening) {
+      return;
+    }
+
     logger.info("WSController shutting down...");
     this._server.close(() => {
       logger.info("WSController shutdown complete");
