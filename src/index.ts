@@ -9,3 +9,21 @@ const lambdaController = new LambdaController();
 httpController.init();
 wsController.init();
 lambdaController.init();
+
+//#region Graceful Shutdown
+const shutdownControllers = () => {
+  httpController.shutdown();
+  wsController.shutdown();
+  lambdaController.shutdown();
+};
+
+process.on("SIGTERM", async () => {
+  shutdownControllers();
+  process.exit(0);
+});
+
+process.on("SIGINT", async () => {
+  shutdownControllers();
+  process.exit(0);
+});
+//#endregion

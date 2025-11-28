@@ -103,6 +103,13 @@ export class WSController implements Controller {
       logger.info(`WSController is listening on port ${this._port}`);
     });
   }
+
+  shutdown(): void {
+    logger.info("WSController shutting down...");
+    this._server.close(() => {
+      logger.info("WSController shutdown complete");
+    });
+  }
 }
 
 type Message = {
