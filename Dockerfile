@@ -19,7 +19,7 @@ RUN pnpm install --frozen-lockfile --production=false --ignore-scripts
 COPY . .
 
 # Build then remove build dependencies and unnecessary files
-RUN NODE_ENV=production node build.mjs \
+RUN NODE_ENV=production pnpm tsdown \
     && apk del .build-deps \
     && rm -rf /root/.npm /root/.pnpm-store /tmp/* /var/tmp/*
 
@@ -43,7 +43,7 @@ RUN adduser -D -s /sbin/nologin -u 1001 app
 
 WORKDIR /app
 
-COPY --from=build --chown=1001:1001 /build/dist/index.js ./index.js
+COPY --from=build --chown=1001:1001 /build/dist/index.cjs ./index.js
 
 # Switch to non-root user
 USER 1001
