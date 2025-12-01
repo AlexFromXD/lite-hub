@@ -4,6 +4,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "build": "node build.mjs",
+    "build:tsdown": "tsdown",
+    "build:tsdown:prod": "NODE_ENV=production tsdown",
     "build:tsc": "tsc -p tsconfig.build.json",
     "build:prod": "NODE_ENV=production node build.mjs",
     "typecheck": "tsc --noEmit",
@@ -41,6 +43,7 @@
     "lint-staged": "^16.2.7",
     "prettier": "^3.7.1",
     "ts-node": "^10.9.2",
+    "tsdown": "^0.16.8",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.0",
     "vitest": "^4.0.14"
