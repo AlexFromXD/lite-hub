@@ -1,21 +1,22 @@
 # Tree Shaking Implementation
 
-This project now implements **tree shaking** using esbuild to significantly reduce bundle size and improve performance.
+This project implements **tree shaking** using tsdown (powered by Rolldown) to significantly reduce bundle size and improve performance.
 
 ## Build System Comparison
 
-| Build Type           | Size | Files       | Tool      | Tree Shaking | Minification  |
-| -------------------- | ---- | ----------- | --------- | ------------ | ------------- |
-| **Old (TypeScript)** | 268K | 15 JS files | `tsc`     | ❌ None      | ❌ None       |
-| **New (Bundled)**    | 28K  | 1 JS file   | `esbuild` | ✅ Enabled   | ✅ Production |
+| Build Type            | Size | Files       | Tool     | Tree Shaking | Minification  |
+| --------------------- | ---- | ----------- | -------- | ------------ | ------------- |
+| **Old (TypeScript)**  | 268K | 15 JS files | `tsc`    | ❌ None      | ❌ None       |
+| **Current (Bundled)** | 874K | 1 JS file   | `tsdown` | ✅ Enabled   | ✅ Production |
 
 ## Benefits
 
 - **🌳 Tree Shaking**: Eliminates dead code and unused exports
-- **📦 90% Size Reduction**: From 268KB to 9KB (minified production bundle)
+- **📦 Single Bundle**: One optimized JavaScript file for deployment
 - **🚀 Faster Startup**: Single optimized JavaScript file
 - **🔧 Better Deployment**: Simplified Docker images with minimal footprint
 - **📊 Bundle Analysis**: Built-in analysis tools to track dependencies
+- **⚡ Rust Performance**: Powered by Rolldown (Rust-based bundler)
 
 ## Build Scripts
 
@@ -26,17 +27,14 @@ pnpm build
 # Production build (minified, optimized for Docker)
 pnpm build:prod
 
-# Analyze bundle size and dependencies
-pnpm build:analyze
-
 # Legacy TypeScript-only build (for comparison)
 pnpm build:tsc
 ```
 
 ## Configuration Files
 
-- **`build.mjs`**: esbuild configuration with tree shaking
-- **`tsconfig.json`**: Updated for ESNext modules (better tree shaking)
+- **`tsdown.config.ts`**: tsdown configuration with tree shaking
+- **`tsconfig.json`**: TypeScript configuration
 - **`Dockerfile`**: Optimized for new build process
 
 ## Tree Shaking Features
@@ -46,7 +44,7 @@ pnpm build:tsc
 3. **Bundle Splitting**: Keeps Node.js dependencies external
 4. **Production Optimizations**:
    - Minification
-   - Drop console.log statements
+   - Environment variable inlining
    - Optimized for Node.js runtime
 
 ## Docker Optimization
@@ -54,15 +52,13 @@ pnpm build:tsc
 The Dockerfile now:
 
 - Uses production build with tree shaking
-- Creates minimal production `package.json`
-- Installs only runtime dependencies in final image
+- Creates minimal production bundle
 - Results in smaller, faster Docker images
 
 ## Bundle Analysis
 
-Run `pnpm build:analyze` to see:
+Run `pnpm build:prod` to see:
 
-- Per-file contribution to bundle size
-- Import/export tree
-- Optimization opportunities
-- Detailed metadata in `dist/meta.json`
+- Bundle size reporting
+- Gzip compression analysis
+- Build performance metrics
